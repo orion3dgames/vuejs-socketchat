@@ -1,0 +1,225 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 14/12/2018, 9:26:47 AM
+    Author     : Orion
+*/
+
+@import "variables";
+
+@import "bootstrap-custom";
+
+$top_bar_height: 56px;
+$width_menu: 70px;
+$width_sidebar: 400px;
+
+body{
+  padding-top: $top_bar_height;
+}
+
+.chatbox{
+
+  display: flex;
+  overflow: hidden;
+
+  .chatbox-header{
+    width: 100%;
+    height: $top_bar_height;
+    background: #464775;
+    color: #FFF;
+    padding: 12px;
+  }
+
+  .chatbox-sidebar,
+  .chatbox-content{
+    height: calc(100vh - #{$top_bar_height});
+  }
+
+  .chatbox-sidebar{
+    background: #FFF;
+    border-right: 1px solid #EEE;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chatbox-jitsi{
+    display: none;
+    background: #FFF;
+    border-left: 1px solid #EEE;
+    width: 100%;
+    height: 320px;
+    margin-top: 8px;
+  }
+
+  .chatbox-content{
+    width: calc(100% - 400px);
+    background: #FFF;
+    flex-direction: column;
+  }
+
+  .chatbox-sidebar {
+    //overflow-y: scroll;
+    h5{
+      background: #FFF;
+      position: sticky;
+      top: 0px;
+    }
+    ul.sidebar-menu {
+
+      padding: 0px;
+      margin: 0px;
+      list-style-type: none;
+      overflow-y: scroll;
+      height: calc(100vh - 106px);
+
+      a {
+        border-bottom: 1px solid #EEE;
+        padding: 5px;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 16px;
+
+        .title{
+          font-size: 16px;
+          color: $primary;
+        }
+
+        small {
+          color: gray;
+        }
+
+        &:hover {
+          text-decoration: none;
+          background: #EEE;
+        }
+      }
+
+      a.active {
+        background: #EEE;
+      }
+
+      &.collapsed {
+        display: none;
+      }
+    }
+  }
+
+  .chatbox-content{
+
+    position: relative;
+
+    .chatbox-content-header{
+      padding: 10px;
+      //height: $top_bar_height;
+      width: 100%;
+      background: #F7F7F7;
+      border-bottom: 1px solid #CCC;
+    }
+
+    .chatbox-content-body{
+      padding: 15px;
+      width: 100%;
+      height: 100%;
+      background: #FFF;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
+    .chatbox-content-footer{
+      position: relative;
+      padding: 15px;
+      width: 100%;
+      background: #F7F7F7;
+      border-top: 1px solid #EEE;
+
+      .file-manager-link .card .link{
+        float: right;
+        text-align: right;
+      }
+      .file-manager-gallery{
+        width: 75%;
+      }
+    }
+
+    // this is loading bloc that covers the chat send bloc
+    .chatbox-content-footer-loading{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0px;
+      left: 0px;
+      z-index: 10;
+      background: rgba(255,255,255, .5);
+    }
+
+    .unread-warning{
+      margin: 15px;
+      background: lightyellow;
+      text-align: center;
+      display: block;
+      clear: both;
+    }
+  }
+
+  // WHEN NOT IN A ROOM
+  @include media-breakpoint-down(md) {
+    .chatbox-content{
+      display: none;
+    }
+  }
+  @include media-breakpoint-up(md) {
+    .chatbox-sidebar{
+      width: $width_sidebar;
+    }
+    .chatbox-content{
+      display: flex;
+    }
+  }
+
+  // WHEN IN A ROOM
+  &.opened{
+    .chatbox-content{
+      display: flex;
+    }
+    .chatbox-sidebar{
+      display: none;
+    }
+    @include media-breakpoint-up(md) {
+      .chatbox-sidebar{
+        display: block;
+        width: #{$width_sidebar};
+      }
+    }
+    @include media-breakpoint-down(md) {
+      .chatbox-content{
+        width: 100%;
+      }
+    }
+  }
+
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #1e2125;
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #EEE;
+  }
+  &::before {
+    margin-right: .25em;
+  }
+  &::after {
+    margin-left: .25em;
+  }
+}
