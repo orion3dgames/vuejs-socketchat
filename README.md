@@ -23,20 +23,3 @@ Built in PHP, will be used for authentication + interacting with the MYSQL SERVE
 Using socket.io, will allow to realtime messaging between users
 #### 4) CLIENT APP
 Will use VUE.JS and makes calls to both the API WEBSITE and the SOCKET SERVER
-
-## Getting started
-
-#### Install dependencies
-```bash
-npm install
-```
-
-#### Run local dev server
-```bash
-npm run serve
-```
-
-#### Build for production (DIST folder)
-```bash
-npm run production
-```
