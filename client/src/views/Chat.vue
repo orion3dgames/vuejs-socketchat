@@ -1,4 +1,5 @@
 <template>
+
   <div style="display: flex;flex-direction: column;height: 100%;">
 
     <div class="chatbox-content-header" v-if="!isLoading">
@@ -15,6 +16,11 @@
     <div class="chatbox-content-body" id="chat-container" data-href="/ajax/loadMoreMessages/188/" data-l="2">
       <div v-if="isLoading"><font-awesome-icon :icon="['fas', 'spinner']" size="2x" spin /></div>
       <div class="chatbox-messages chatbox-messages-188" v-if="!isLoading">
+        <infinite-loading @infinite="infiniteHandler" direction="top">
+          <div slot="error" slot-scope="{ trigger }">
+            Error message, click <a href="javascript:;" @click="trigger">here</a> to retry
+          </div>
+        </infinite-loading>
         <div class="card float-end text-right mb-2 clearfix"
              id="msg-4056"
              style="word-break: break-word; width: 90%; background: #f0f9ff;"
@@ -47,12 +53,17 @@
 </template>
 
 <script>
+import InfiniteLoading from 'vue-infinite-loading';
 import ChatService from '@/services/ChatService.js';
 export default {
   name: 'Chat',
+  components: {
+    InfiniteLoading,
+  },
   data() {
     // initialize the event object
     return {
+      page: 1,
       chat: {},
       message: '',
       isLoading: false,
@@ -60,28 +71,46 @@ export default {
   },
   watch:{
     $route (to, from){
-      this.getChatData(this.$route.params.id);
+      this.page = 1;
+      this.getChatData();
     }
   },
   created() {
     this.getChatData();
   },
   updated() {
-    this.$nextTick(() => this.scrollToBottom());
+    //this.$nextTick(() => this.scrollToBottom());
   },
   methods: {
+    infiniteHandler($state) {
+      this.page += 1;
+      console.log('TOP REACHED, START LOAD REQUEST PAGE: ', this.page);
+      ChatService.loadMessages(this.$route.params.id, this.page)
+          .then(
+              (messages => {
+                if (messages && messages.length > 0) {
+                  this.chat.messages.unshift(...messages.reverse());
+                  $state.loaded();
+                } else {
+                  $state.complete();
+                }
+                this.isLoading = false;
+              }).bind(this)
+          );
+    },
     handleSubmit:function(){
       console.log('SUBMIT FORM');
-      this.$socket.emit('message', this.message);
+      //this.$socket.emit('message', this.message);
     },
     scrollToBottom() {
       var elem = this.$el.querySelector("#chat-container");
       elem.scrollTop = elem.scrollHeight;
     },
     async getChatData() {
+      console.log('LOADING PAGE: ', this.page);
       this.isLoading = true;
       // Use the eventService to call the getEventSingle method
-      ChatService.getChat(this.$route.params.id)
+      ChatService.getChat(this.$route.params.id, this.page)
           .then(
               (chat => {
                 this.isLoading = false;

@@ -38,6 +38,7 @@ Vue.component('sidebar_layout', SidebarLayout);
 Vue.component('login_layout', LoginLayout);
 
 // START SOCKET IO
+/*
 import VueSocketIO from 'vue-socket.io'
 Vue.use(new VueSocketIO({
   debug: true,
@@ -48,7 +49,7 @@ Vue.use(new VueSocketIO({
     'reconnectionDelayMax' : 5000,
     'reconnectionAttempts': 1
   }
-}));
+}));*/
 
 // INITIALIZE VUE
 new Vue({
