@@ -31,7 +31,6 @@ export default new Router({
       meta: { layout: "sidebar", 'opened': true },
       component: () => import('../views/Chat.vue'),
       beforeEnter: (to, from, next) => {
-        //document.querySelector("#chatbox").classList.add('opened');
         next()
       }
     },

@@ -61,7 +61,6 @@ export default {
     InfiniteLoading,
   },
   data() {
-    // initialize the event object
     return {
       page: 1,
       chat: {},
@@ -73,10 +72,13 @@ export default {
     $route (to, from){
       this.page = 1;
       this.getChatData();
+      this.toggleOpenClass();
     }
   },
   created() {
     this.getChatData();
+    this.toggleOpenClass();
+
   },
   updated() {
     //this.$nextTick(() => this.scrollToBottom());
@@ -84,7 +86,6 @@ export default {
   methods: {
     infiniteHandler($state) {
       this.page += 1;
-      console.log('TOP REACHED, START LOAD REQUEST PAGE: ', this.page);
       ChatService.loadMessages(this.$route.params.id, this.page)
           .then(
               (messages => {
@@ -99,22 +100,26 @@ export default {
           );
     },
     handleSubmit:function(){
-      console.log('SUBMIT FORM');
       //this.$socket.emit('message', this.message);
     },
     scrollToBottom() {
       var elem = this.$el.querySelector("#chat-container");
       elem.scrollTop = elem.scrollHeight;
     },
+    toggleOpenClass() {
+      let el = document.querySelector("#chatbox");
+      if(el){
+        el.classList.add('opened');
+      }
+    },
     async getChatData() {
-      console.log('LOADING PAGE: ', this.page);
       this.isLoading = true;
-      // Use the eventService to call the getEventSingle method
       ChatService.getChat(this.$route.params.id, this.page)
           .then(
               (chat => {
                 this.isLoading = false;
                 this.chat = chat;
+                this.toggleOpenClass();
               }).bind(this)
           );
     }
